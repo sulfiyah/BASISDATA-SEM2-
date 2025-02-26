@@ -1,0 +1,384 @@
+Microsoft Windows [Version 10.0.22631.4751]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\hp>CD C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| perpustakaan       |
+| perpustakaan2      |
+| phpmyadmin         |
+| siperpus           |
+| test               |
++--------------------+
+8 rows in set (0.040 sec)
+
+MariaDB [(none)]> USE perpustakaan;
+Database changed
+MariaDB [perpustakaan]> SHOW TABLES;
++------------------------+
+| Tables_in_perpustakaan |
++------------------------+
+| mahasiswa              |
++------------------------+
+1 row in set (0.001 sec)
+
+MariaDB [perpustakaan]> DECS mahasiswa;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DECS mahasiswa' at line 1
+MariaDB [perpustakaan]> DROP TABLE mahasiswa;
+Query OK, 0 rows affected (0.015 sec)
+
+MariaDB [perpustakaan]> SHOW TABLES;
+Empty set (0.001 sec)
+
+MariaDB [perpustakaan]> CREATE TABLE mahasiswa;
+ERROR 1113 (42000): A table must have at least 1 column
+MariaDB [perpustakaan]> CREATE TABLE mahasiswa (
+    -> NPM char(10) NOT NULL PRIMARY KEY,
+    -> Nama varchar(20) NOT NULL,
+    -> Tempat_lahir varchar(20) NOT NULL,
+    -> Tanggal_lahir DATE NOT NULL,
+    -> No_HP varchar(15)
+    -> );
+Query OK, 0 rows affected (0.024 sec)
+
+MariaDB [perpustakaan]> SHOW TABLES;
++------------------------+
+| Tables_in_perpustakaan |
++------------------------+
+| mahasiswa              |
++------------------------+
+1 row in set (0.001 sec)
+
+MariaDB [perpustakaan]> CREATE TABLE dosen (
+    -> NIDN char(10) NOT NULL PRIMARY KEY,
+    -> Nama varchar(30) NOT NULL,
+    -> Alamat varchar(50) NOT NULL,
+    -> Email varchar(100),
+    -> No_HP varchar(15)
+    -> );
+Query OK, 0 rows affected (0.015 sec)
+
+MariaDB [perpustakaan]> SHOW TABLES;
++------------------------+
+| Tables_in_perpustakaan |
++------------------------+
+| dosen                  |
+| mahasiswa              |
++------------------------+
+2 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> CREATE TABLE matakuliah (
+    -> KodeMK varchar(10) NOT NULL PRIMARY KEY,
+    -> NamaMK varchar(30) NOT NULL,
+    -> SKS char(1) NOT NULL,
+    -> Semester char(1) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [perpustakaan]> SHOW TABLES;
++------------------------+
+| Tables_in_perpustakaan |
++------------------------+
+| dosen                  |
+| mahasiswa              |
+| matakuliah             |
++------------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> Bye
+Ctrl-C -- exit!
+
+C:\xampp\mysql\bin>mysqldump -u root -p perpustakaan > D:\perpustakaan_backup.sql
+Enter password:
+
+C:\xampp\mysql\bin>mysqldump -u root -p perpustakaan < D:\perpus
+takaan_backup.sql
+Enter password:
+-- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
+--
+-- Host: localhost    Database: perpustakaan
+-- ------------------------------------------------------
+-- Server version       10.4.32-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `dosen`
+--
+
+DROP TABLE IF EXISTS `dosen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dosen` (
+  `NIDN` char(10) NOT NULL,
+  `Nama` varchar(30) NOT NULL,
+  `Alamat` varchar(50) NOT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  `No_HP` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`NIDN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dosen`
+--
+
+LOCK TABLES `dosen` WRITE;
+/*!40000 ALTER TABLE `dosen` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dosen` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mahasiswa`
+--
+
+DROP TABLE IF EXISTS `mahasiswa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mahasiswa` (
+  `NPM` char(10) NOT NULL,
+  `Nama` varchar(20) NOT NULL,
+  `Tempat_lahir` varchar(20) NOT NULL,
+  `Tanggal_lahir` date NOT NULL,
+  `No_HP` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`NPM`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mahasiswa`
+--
+
+LOCK TABLES `mahasiswa` WRITE;
+/*!40000 ALTER TABLE `mahasiswa` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mahasiswa` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `matakuliah`
+--
+
+DROP TABLE IF EXISTS `matakuliah`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `matakuliah` (
+  `KodeMK` varchar(10) NOT NULL,
+  `NamaMK` varchar(30) NOT NULL,
+  `SKS` char(1) NOT NULL,
+  `Semester` char(1) NOT NULL,
+  PRIMARY KEY (`KodeMK`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `matakuliah`
+--
+
+LOCK TABLES `matakuliah` WRITE;
+/*!40000 ALTER TABLE `matakuliah` DISABLE KEYS */;
+/*!40000 ALTER TABLE `matakuliah` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-02-26 12:18:00
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 11
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| perpustakaan       |
+| perpustakaan2      |
+| phpmyadmin         |
+| siperpus           |
+| test               |
++--------------------+
+8 rows in set (0.015 sec)
+
+MariaDB [(none)]> USE perpustakaan;
+Database changed
+MariaDB [perpustakaan]> SHOW TABLES;
++------------------------+
+| Tables_in_perpustakaan |
++------------------------+
+| dosen                  |
+| mahasiswa              |
+| matakuliah             |
++------------------------+
+3 rows in set (0.015 sec)
+
+MariaDB [perpustakaan]> DESC dosen;
++--------+--------------+------+-----+---------+-------+
+| Field  | Type         | Null | Key | Default | Extra |
++--------+--------------+------+-----+---------+-------+
+| NIDN   | char(10)     | NO   | PRI | NULL    |       |
+| Nama   | varchar(30)  | NO   |     | NULL    |       |
+| Alamat | varchar(50)  | NO   |     | NULL    |       |
+| Email  | varchar(100) | YES  |     | NULL    |       |
+| No_HP  | varchar(15)  | YES  |     | NULL    |       |
++--------+--------------+------+-----+---------+-------+
+5 rows in set (0.032 sec)
+
+MariaDB [perpustakaan]> ALTER TABLE mahasiswa ADD Jenis_kelamin
+enum('L','P');
+Query OK, 0 rows affected (0.035 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> DESC mahasiswa;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| NPM           | char(10)      | NO   | PRI | NULL    |       |
+| Nama          | varchar(20)   | NO   |     | NULL    |       |
+| Tempat_lahir  | varchar(20)   | NO   |     | NULL    |       |
+| Tanggal_lahir | date          | NO   |     | NULL    |       |
+| No_HP         | varchar(15)   | YES  |     | NULL    |       |
+| Jenis_kelamin | enum('L','P') | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.039 sec)
+
+MariaDB [perpustakaan]> ALTER TABLE mahasiswa MODIFY COLUMN Nama varchar(30);
+Query OK, 0 rows affected (0.053 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> DESC mahasiswa;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| NPM           | char(10)      | NO   | PRI | NULL    |       |
+| Nama          | varchar(30)   | YES  |     | NULL    |       |
+| Tempat_lahir  | varchar(20)   | NO   |     | NULL    |       |
+| Tanggal_lahir | date          | NO   |     | NULL    |       |
+| No_HP         | varchar(15)   | YES  |     | NULL    |       |
+| Jenis_kelamin | enum('L','P') | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.033 sec)
+
+MariaDB [perpustakaan]> ALTER TABLE mahasiswa DROP COLUMN No_HP;
+
+Query OK, 0 rows affected (0.021 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> DESC mahasiswa;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| NPM           | char(10)      | NO   | PRI | NULL    |       |
+| Nama          | varchar(30)   | YES  |     | NULL    |       |
+| Tempat_lahir  | varchar(20)   | NO   |     | NULL    |       |
+| Tanggal_lahir | date          | NO   |     | NULL    |       |
+| Jenis_kelamin | enum('L','P') | YES  |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+5 rows in set (0.038 sec)
+
+MariaDB [perpustakaan]> Bye
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 12
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| perpustakaan       |
+| perpustakaan2      |
+| phpmyadmin         |
+| siperpus           |
+| test               |
++--------------------+
+8 rows in set (0.001 sec)
+
+MariaDB [(none)]> USE perpustakaan2;
+Database changed
+MariaDB [perpustakaan2]> CREATE TABLE mhs(
+    -> Nama varchar(50) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.028 sec)
+
+MariaDB [perpustakaan2]> DESC mhs;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| Nama  | varchar(50) | NO   |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+1 row in set (0.037 sec)
+
+MariaDB [perpustakaan2]> DROP TABLE mhs;
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [perpustakaan2]> SHOW TABLES;
+Empty set (0.001 sec)
+
+MariaDB [perpustakaan2]> DROP DATABASE perpustakaan2;
+Query OK, 0 rows affected (0.042 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| perpustakaan       |
+| phpmyadmin         |
+| siperpus           |
+| test               |
++--------------------+
+7 rows in set (0.001 sec)
+
+MariaDB [(none)]>
