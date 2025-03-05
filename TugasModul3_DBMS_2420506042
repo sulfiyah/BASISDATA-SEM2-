@@ -1,0 +1,162 @@
+Microsoft Windows [Version 10.0.22631.4751]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\hp>CD C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| perpustakaan       |
+| phpmyadmin         |
+| siperpus           |
+| supil              |
+| test               |
++--------------------+
+8 rows in set (0.069 sec)
+
+MariaDB [(none)]> CREATE DATABASE BTS;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE BTS;
+Database changed
+MariaDB [BTS]> CREATE TABLE member (
+    -> NPM char(5) NOT NULL PRIMARY KEY,
+    -> Nama varchar(25) NOT NULL,
+    -> Tempat_Lahir varchar(30) NOT NULL,
+    -> Tanggal_Lahir date NOT NULL,
+    -> Jenis_Kelamin enum('L','P') NOT NULL,
+    -> No_HP varchar(25) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.022 sec)
+
+MariaDB [BTS]> SHOW TABLES;
++---------------+
+| Tables_in_bts |
++---------------+
+| member        |
++---------------+
+1 row in set (0.001 sec)
+
+MariaDB [BTS]> DESC member;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| NPM           | char(5)       | NO   | PRI | NULL    |       |
+| Nama          | varchar(25)   | NO   |     | NULL    |       |
+| Tempat_Lahir  | varchar(30)   | NO   |     | NULL    |       |
+| Tanggal_Lahir | date          | NO   |     | NULL    |       |
+| Jenis_Kelamin | enum('L','P') | NO   |     | NULL    |       |
+| No_HP         | varchar(25)   | NO   |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.034 sec)
+
+MariaDB [BTS]> INSERT INTO member VALUES ('13061', 'KIM NAMJOON', 'Seoul', '1994/09/12', 'L', '8212091994');
+Query OK, 1 row affected (0.068 sec)
+
+MariaDB [BTS]> SELECT * FROM member;
++-------+-------------+--------------+---------------+---------------+------------+
+| NPM   | Nama        | Tempat_Lahir | Tanggal_Lahir | Jenis_Kelamin | No_HP      |
++-------+-------------+--------------+---------------+---------------+------------+
+| 13061 | KIM NAMJOON | Seoul        | 1994-09-12    | L             | 8212091994 |
++-------+-------------+--------------+---------------+---------------+------------+
+1 row in set (0.001 sec)
+
+MariaDB [BTS]> INSERT INTO member VALUES ('13062', 'KIM SEOKJIN', 'Gwacheon', '1992/12/04', 'L', '8204121992');
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13063', 'SUGA', 'Daegu', '1993/03/09', 'L', '8209031993');
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13064', 'ARMY', 'Cirebon', '2013/07/09', 'P', '8209072013');
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13065', 'JUNG HOSEOK', 'Gwangju', '1994/02/18', 'L', '8218021994');
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13066', 'PARK JIMIN', 'Busan', '1995/10/13', 'L', '8213101995');
+Query OK, 1 row affected (0.072 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13067', 'KIM TAEHYUNG', 'Daegu', '1995/12/30', 'L', '8230121995');
+Query OK, 1 row affected (0.019 sec)
+
+MariaDB [bts]> INSERT INTO member VALUES ('13068', 'JEON JUNGKOOK', 'Busan', '1997/09/01', 'L', '8201091997');
+Query OK, 1 row affected (0.018 sec)
+
+MariaDB [bts]> SELECT * FROM member;
++-------+---------------+--------------+---------------+---------------+------------+
+| NPM   | Nama          | Tempat_Lahir | Tanggal_Lahir | Jenis_Kelamin | No_HP      |
++-------+---------------+--------------+---------------+---------------+------------+
+| 13061 | KIM NAMJOON   | Seoul        | 1994-09-12    | L             | 8212091994 |
+| 13062 | KIM SEOKJIN   | Gwacheon     | 1992-12-04    | L             | 8204121992 |
+| 13063 | SUGA          | Daegu        | 1993-03-09    | L             | 8209031993 |
+| 13064 | ARMY          | Cirebon      | 2013-07-09    | P             | 8209072013 |
+| 13065 | JUNG HOSEOK   | Gwangju      | 1994-02-18    | L             | 8218021994 |
+| 13066 | PARK JIMIN    | Busan        | 1995-10-13    | L             | 8213101995 |
+| 13067 | KIM TAEHYUNG  | Daegu        | 1995-12-30    | L             | 8230121995 |
+| 13068 | JEON JUNGKOOK | Busan        | 1997-09-01    | L             | 8201091997 |
++-------+---------------+--------------+---------------+---------------+------------+
+8 rows in set (0.001 sec)
+
+MariaDB [bts]> UPDATE `member` SET `Nama` = 'MIN YOONGI' WHERE No_HP = '8209031993';
+Query OK, 1 row affected (0.015 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [bts]> SELECT * FROM member;
++-------+---------------+--------------+---------------+---------------+------------+
+| NPM   | Nama          | Tempat_Lahir | Tanggal_Lahir | Jenis_Kelamin | No_HP      |
++-------+---------------+--------------+---------------+---------------+------------+
+| 13061 | KIM NAMJOON   | Seoul        | 1994-09-12    | L             | 8212091994 |
+| 13062 | KIM SEOKJIN   | Gwacheon     | 1992-12-04    | L             | 8204121992 |
+| 13063 | MIN YOONGI    | Daegu        | 1993-03-09    | L             | 8209031993 |
+| 13064 | ARMY          | Cirebon      | 2013-07-09    | P             | 8209072013 |
+| 13065 | JUNG HOSEOK   | Gwangju      | 1994-02-18    | L             | 8218021994 |
+| 13066 | PARK JIMIN    | Busan        | 1995-10-13    | L             | 8213101995 |
+| 13067 | KIM TAEHYUNG  | Daegu        | 1995-12-30    | L             | 8230121995 |
+| 13068 | JEON JUNGKOOK | Busan        | 1997-09-01    | L             | 8201091997 |
++-------+---------------+--------------+---------------+---------------+------------+
+8 rows in set (0.001 sec)
+
+MariaDB [bts]> DELETE FROM `member` WHERE `NPM` = '13064';
+Query OK, 1 row affected (0.035 sec)
+
+MariaDB [bts]> SELECT * FROM member;
++-------+---------------+--------------+---------------+---------------+------------+
+| NPM   | Nama          | Tempat_Lahir | Tanggal_Lahir | Jenis_Kelamin | No_HP      |
++-------+---------------+--------------+---------------+---------------+------------+
+| 13061 | KIM NAMJOON   | Seoul        | 1994-09-12    | L             | 8212091994 |
+| 13062 | KIM SEOKJIN   | Gwacheon     | 1992-12-04    | L             | 8204121992 |
+| 13063 | MIN YOONGI    | Daegu        | 1993-03-09    | L             | 8209031993 |
+| 13065 | JUNG HOSEOK   | Gwangju      | 1994-02-18    | L             | 8218021994 |
+| 13066 | PARK JIMIN    | Busan        | 1995-10-13    | L             | 8213101995 |
+| 13067 | KIM TAEHYUNG  | Daegu        | 1995-12-30    | L             | 8230121995 |
+| 13068 | JEON JUNGKOOK | Busan        | 1997-09-01    | L             | 8201091997 |
++-------+---------------+--------------+---------------+---------------+------------+
+7 rows in set (0.001 sec)
+
+MariaDB [bts]> SELECT NPM, Nama, No_HP from member WHERE Jenis_Kelamin = 'L';
++-------+---------------+------------+
+| NPM   | Nama          | No_HP      |
++-------+---------------+------------+
+| 13061 | KIM NAMJOON   | 8212091994 |
+| 13062 | KIM SEOKJIN   | 8204121992 |
+| 13063 | MIN YOONGI    | 8209031993 |
+| 13065 | JUNG HOSEOK   | 8218021994 |
+| 13066 | PARK JIMIN    | 8213101995 |
+| 13067 | KIM TAEHYUNG  | 8230121995 |
+| 13068 | JEON JUNGKOOK | 8201091997 |
++-------+---------------+------------+
+7 rows in set (0.001 sec)
