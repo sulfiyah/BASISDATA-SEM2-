@@ -1,0 +1,497 @@
+Microsoft Windows [Version 10.0.22631.4751]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\hp>CD C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root  -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE magicshop_supil;
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [(none)]> USE magicshop_supil;
+Database changed
+MariaDB [magicshop_supil]> CREATE TABLE products (
+    -> product_id INT PRIMARY KEY AUTO_INCREMENT,
+    -> product_name VARCHAR(100),
+    -> category VARCHAR(50),
+    -> price DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.037 sec)
+
+MariaDB [magicshop_supil]> INSERT INTO products (product_id, product_name, category, price) VALUES
+    -> ('12346', 'Smartphone B', 'Electronics', 800.00),
+    -> ('12347', 'Tablet C', 'Electronics', 500.00),
+    -> ('12348', 'Shirt D', 'Clothing', 25.00),
+    -> ('12349', 'Jeans E', 'Clothing', 45.00),
+    -> ('12350', 'Shoes F', 'Clothing', 60.00),
+    -> ('12351', 'Book G', 'Books', 15.00),
+    -> ('12352', 'Notebook H', 'Books', 10.00),
+    -> ('12353', 'Pen I', 'Stationery', 2.00),
+    -> ('12354', 'Pencil J', 'Stationery', 1.50);
+Query OK, 9 rows affected (0.019 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+MariaDB [magicshop_supil]> select * from products;
++------------+--------------+-------------+---------+
+| product_id | product_name | category    | price   |
++------------+--------------+-------------+---------+
+|      12345 | Laptop A     | Electronics | 1200.00 |
+|      12346 | Smartphone B | Electronics |  800.00 |
+|      12347 | Tablet C     | Electronics |  500.00 |
+|      12348 | Shirt D      | Clothing    |   25.00 |
+|      12349 | Jeans E      | Clothing    |   45.00 |
+|      12350 | Shoes F      | Clothing    |   60.00 |
+|      12351 | Book G       | Books       |   15.00 |
+|      12352 | Notebook H   | Books       |   10.00 |
+|      12353 | Pen I        | Stationery  |    2.00 |
+|      12354 | Pencil J     | Stationery  |    1.50 |
++------------+--------------+-------------+---------+
+10 rows in set (0.013 sec)
+
+MariaDB [magicshop_supil]> SELECT COUNT(*) AS total_products FROM products;
++----------------+
+| total_products |
++----------------+
+|             10 |
++----------------+
+1 row in set (0.016 sec)
+
+MariaDB [magicshop_supil]> SELECT SUM(price) AS total_price FROM products;
++-------------+
+| total_price |
++-------------+
+|     2658.50 |
++-------------+
+1 row in set (0.013 sec)
+
+MariaDB [magicshop_supil]> SELECT AVG(price) AS average_price FROM products;
++---------------+
+| average_price |
++---------------+
+|    265.850000 |
++---------------+
+1 row in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT MIN(price) AS cheapest_product, MAX(price) AS most_expensive_product FROM products;
++------------------+------------------------+
+| cheapest_product | most_expensive_product |
++------------------+------------------------+
+|             1.50 |                1200.00 |
++------------------+------------------------+
+1 row in set (0.003 sec)
+
+MariaDB [magicshop_supil]> SELECT * FROM products WHERE price > 50;
++------------+--------------+-------------+---------+
+| product_id | product_name | category    | price   |
++------------+--------------+-------------+---------+
+|      12345 | Laptop A     | Electronics | 1200.00 |
+|      12346 | Smartphone B | Electronics |  800.00 |
+|      12347 | Tablet C     | Electronics |  500.00 |
+|      12350 | Shoes F      | Clothing    |   60.00 |
++------------+--------------+-------------+---------+
+4 rows in set (0.014 sec)
+
+MariaDB [magicshop_supil]> SELECT * FROM products WHERE category = 'Electronics';
++------------+--------------+-------------+---------+
+| product_id | product_name | category    | price   |
++------------+--------------+-------------+---------+
+|      12345 | Laptop A     | Electronics | 1200.00 |
+|      12346 | Smartphone B | Electronics |  800.00 |
+|      12347 | Tablet C     | Electronics |  500.00 |
++------------+--------------+-------------+---------+
+3 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT * FROM products WHERE price BETWEEN 20 AND 100;
++------------+--------------+----------+-------+
+| product_id | product_name | category | price |
++------------+--------------+----------+-------+
+|      12348 | Shirt D      | Clothing | 25.00 |
+|      12349 | Jeans E      | Clothing | 45.00 |
+|      12350 | Shoes F      | Clothing | 60.00 |
++------------+--------------+----------+-------+
+3 rows in set (0.015 sec)
+
+MariaDB [magicshop_supil]> SELECT * FROM products WHERE product_name LIKE 'S%';
++------------+--------------+-------------+--------+
+| product_id | product_name | category    | price  |
++------------+--------------+-------------+--------+
+|      12346 | Smartphone B | Electronics | 800.00 |
+|      12348 | Shirt D      | Clothing    |  25.00 |
+|      12350 | Shoes F      | Clothing    |  60.00 |
++------------+--------------+-------------+--------+
+3 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, COUNT(*) AS total_products
+    -> FROM products
+    -> GROUP BY category;
++-------------+----------------+
+| category    | total_products |
++-------------+----------------+
+| Books       |              2 |
+| Clothing    |              3 |
+| Electronics |              3 |
+| Stationery  |              2 |
++-------------+----------------+
+4 rows in set (0.003 sec)
+
+MariaDB [magicshop_supil]> SELECT category, AVG(price) AS average_price
+    -> FROM products
+    -> GROUP BY category;
++-------------+---------------+
+| category    | average_price |
++-------------+---------------+
+| Books       |     12.500000 |
+| Clothing    |     43.333333 |
+| Electronics |    833.333333 |
+| Stationery  |      1.750000 |
++-------------+---------------+
+4 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, AVG(price) AS average_price
+    -> FROM products
+    -> GROUP BY category
+    -> HAVING AVG(price) > 100;
++-------------+---------------+
+| category    | average_price |
++-------------+---------------+
+| Electronics |    833.333333 |
++-------------+---------------+
+1 row in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, COUNT(*) AS total_products
+    -> FROM products
+    -> GROUP BY category
+    -> HAVING COUNT(*) > 2;
++-------------+----------------+
+| category    | total_products |
++-------------+----------------+
+| Clothing    |              3 |
+| Electronics |              3 |
++-------------+----------------+
+2 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT SUM(price) AS total_price
+    -> FROM products
+    -> WHERE category = 'Electronics';
++-------------+
+| total_price |
++-------------+
+|     2500.00 |
++-------------+
+1 row in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, SUM(price) AS total_price
+    -> FROM products
+    -> GROUP BY category
+    -> HAVING SUM(price) > 1000;
++-------------+-------------+
+| category    | total_price |
++-------------+-------------+
+| Electronics |     2500.00 |
++-------------+-------------+
+1 row in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, MAX(price) AS max_price
+    -> FROM products
+    -> GROUP BY category;
++-------------+-----------+
+| category    | max_price |
++-------------+-----------+
+| Books       |     15.00 |
+| Clothing    |     60.00 |
+| Electronics |   1200.00 |
+| Stationery  |      2.00 |
++-------------+-----------+
+4 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, MIN(price) AS cheapest_product FROM products GROUP BY category;
++-------------+------------------+
+| category    | cheapest_product |
++-------------+------------------+
+| Books       |            10.00 |
+| Clothing    |            25.00 |
+| Electronics |           500.00 |
+| Stationery  |             1.50 |
++-------------+------------------+
+4 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category FROM products WHERE price > 500;
++-------------+
+| category    |
++-------------+
+| Electronics |
+| Electronics |
++-------------+
+2 rows in set (0.001 sec)
+
+MariaDB [magicshop_supil]> SELECT category, COUNT(*) AS total_produk, SUM(price) AS total_price
+    -> FROM products
+    -> GROUP BY category
+    -> HAVING COUNT(*) > 1;
++-------------+--------------+-------------+
+| category    | total_produk | total_price |
++-------------+--------------+-------------+
+| Books       |            2 |       25.00 |
+| Clothing    |            3 |      130.00 |
+| Electronics |            3 |     2500.00 |
+| Stationery  |            2 |        3.50 |
++-------------+--------------+-------------+
+4 rows in set (0.001 sec)
+
+MariaDB [(none)]> CREATE DATABASE akademik;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE akademik;
+Database changed
+MariaDB [akademik]> CREATE TABLE mahasiswa (
+    -> NPM CHAR(5) PRIMARY KEY,
+    -> Nama VARCHAR(30) NOT NULL,
+    -> Jurusan VARCHAR(30) NOT NULL);
+Query OK, 0 rows affected (0.028 sec)
+
+MariaDB [akademik]> CREATE TABLE mata_kuliah (
+    -> Kode_mk char(10) PRIMARY KEY,
+    -> Nama_mk varchar(50) NOT NULL,
+    -> SKS INT NOT NULL);
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [akademik]> CREATE TABLE nilai (
+    -> id INT auto_increment PRIMARY KEY,
+    -> NPM CHAR(5) NOT NULL,
+    -> Kode_mk char(10) NOT NULL,
+    -> Nilai INT NOT NULL,
+    -> FOREIGN KEY (NPM) REFERENCES mahasiswa(NPM),
+    -> FOREIGN KEY (Kode_mk) REFERENCES mata_kuliah(Kode_mk));
+Query OK, 0 rows affected (0.038 sec)
+
+MariaDB [akademik]> SHOW TABLES;
++--------------------+
+| Tables_in_akademik |
++--------------------+
+| mahasiswa          |
+| mata_kuliah        |
+| nilai              |
++--------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [akademik]> desc mahasiswa;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| NPM     | char(5)     | NO   | PRI | NULL    |       |
+| Nama    | varchar(30) | NO   |     | NULL    |       |
+| Jurusan | varchar(30) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.035 sec)
+
+MariaDB [akademik]> desc mata_kuliah;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Kode_mk | char(10)    | NO   | PRI | NULL    |       |
+| Nama_mk | varchar(50) | NO   |     | NULL    |       |
+| SKS     | int(11)     | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.037 sec)
+
+MariaDB [akademik]> desc nilai;
++---------+----------+------+-----+---------+----------------+
+| Field   | Type     | Null | Key | Default | Extra          |
++---------+----------+------+-----+---------+----------------+
+| id      | int(11)  | NO   | PRI | NULL    | auto_increment |
+| NPM     | char(5)  | NO   | MUL | NULL    |                |
+| Kode_mk | char(10) | NO   | MUL | NULL    |                |
+| Nilai   | int(11)  | NO   |     | NULL    |                |
++---------+----------+------+-----+---------+----------------+
+4 rows in set (0.032 sec)
+
+MariaDB [akademik]> INSERT INTO mahasiswa VALUES
+    -> ('20251', 'Anya', 'Metalurgi'),
+    -> ('20252', 'Loid', 'Kriminologi'),
+    -> ('20253', 'Yor', 'Hukum'),
+    -> ('20254', 'Damian', 'Pariwisata'),
+    -> ('20255', 'Yuri', 'Fisika'),
+    -> ('20256', 'Franky', 'Statistika');
+Query OK, 6 rows affected (0.034 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+MariaDB [akademik]> INSERT INTO mahasiswa VALUES
+    -> ('20257', 'Tabi', 'Hukum'),
+    -> ('20258', 'Cia', 'Fisika'),
+    -> ('20259', 'Haha', 'Statistika'),
+    -> ('20260', 'Hihi', 'Kriminologi'),
+    -> ('20261', 'Huhu', 'Pariwisata'),
+    -> ('20262', 'Vuvu', 'Metalurgi'),
+    -> ('20263', 'Xaxa', 'Hukum');
+Query OK, 7 rows affected (0.017 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+MariaDB [akademik]> SELECT * FROM mahasiswa;
++-------+--------+-------------+
+| NPM   | Nama   | Jurusan     |
++-------+--------+-------------+
+| 20251 | Anya   | Metalurgi   |
+| 20252 | Loid   | Kriminologi |
+| 20253 | Yor    | Hukum       |
+| 20254 | Damian | Pariwisata  |
+| 20255 | Yuri   | Fisika      |
+| 20256 | Franky | Statistika  |
+| 20257 | Tabi   | Hukum       |
+| 20258 | Cia    | Fisika      |
+| 20259 | Haha   | Statistika  |
+| 20260 | Hihi   | Kriminologi |
+| 20261 | Huhu   | Pariwisata  |
+| 20262 | Vuvu   | Metalurgi   |
+| 20263 | Xaxa   | Hukum       |
++-------+--------+-------------+
+13 rows in set (0.001 sec)
+
+MariaDB [(none)]> use akademik;
+Database changed
+MariaDB [akademik]> INSERT INTO mata_kuliah VALUES
+    -> ('A1010', 'Agama', '2'),
+    -> ('P1011', 'PKn', '2'),
+    -> ('FSK00', 'Fisika Dasar', '2'),
+    -> ('KF103', 'Kriminologi Forensik', '3'),
+    -> ('MB666', 'Matematika Bisnis', '3'),
+    -> ('ENG76', 'Bahasa Inggris', '2'),
+    -> ('HP999', 'Hukum Pidana', '2');
+Query OK, 7 rows affected (0.003 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+MariaDB [akademik]> select * from mata_kuliah;
++---------+----------------------+-----+
+| Kode_mk | Nama_mk              | SKS |
++---------+----------------------+-----+
+| A1010   | Agama                |   2 |
+| ENG76   | Bahasa Inggris       |   2 |
+| FSK00   | Fisika Dasar         |   2 |
+| HP999   | Hukum Pidana         |   2 |
+| KF103   | Kriminologi Forensik |   3 |
+| MB666   | Matematika Bisnis    |   3 |
+| P1011   | PKn                  |   2 |
++---------+----------------------+-----+
+7 rows in set (0.001 sec)
+
+MariaDB [akademik]> INSERT INTO nilai VALUES
+    -> ('1', '20251', 'A1010', '98'),
+    -> ('2', '20251', 'FSK00', '50'),
+    -> ('3', '20252', 'P1011', '90'),
+    -> ('4', '20252', 'KF103', '88'),
+    -> ('5', '20253', 'HP999', '75'),
+    -> ('6', '20253', 'ENG76', '87'),
+    -> ('7', '20254', 'MB666', '70'),
+    -> ('8', '20254', 'ENG76', '95'),
+    -> ('9', '20255', 'FSK00', '65'),
+    -> ('10', '20255', 'A1010', '97'),
+    -> ('11', '20256', 'FSK00', '87'),
+    -> ('12', '20256', 'P1011', '83');
+Query OK, 12 rows affected (0.022 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+MariaDB [akademik]> INSERT INTO nilai VALUES
+    -> ('13', '20257', 'HP999', '66'),
+    -> ('14', '20257', 'A1010', '99'),
+    -> ('15', '20258', 'FSK00', '88'),
+    -> ('16', '20259', 'FSK00', '78'),
+    -> ('17', '20260', 'KF103', '90'),
+    -> ('18', '20261', 'ENG76', '79'),
+    -> ('19', '20261', 'MB666', '77'),
+    -> ('20', '20262', 'FSK00', '87'),
+    -> ('21', '20263', 'HP999', '76'),
+    -> ('22', '20263', 'P1011', '91');
+Query OK, 10 rows affected (0.016 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [akademik]> SELECT * FROM nilai;
++----+-------+---------+-------+
+| id | NPM   | Kode_mk | Nilai |
++----+-------+---------+-------+
+|  1 | 20251 | A1010   |    98 |
+|  2 | 20251 | FSK00   |    50 |
+|  3 | 20252 | P1011   |    90 |
+|  4 | 20252 | KF103   |    88 |
+|  5 | 20253 | HP999   |    75 |
+|  6 | 20253 | ENG76   |    87 |
+|  7 | 20254 | MB666   |    70 |
+|  8 | 20254 | ENG76   |    95 |
+|  9 | 20255 | FSK00   |    65 |
+| 10 | 20255 | A1010   |    97 |
+| 11 | 20256 | FSK00   |    87 |
+| 12 | 20256 | P1011   |    83 |
+| 13 | 20257 | HP999   |    66 |
+| 14 | 20257 | A1010   |    99 |
+| 15 | 20258 | FSK00   |    88 |
+| 16 | 20259 | FSK00   |    78 |
+| 17 | 20260 | KF103   |    90 |
+| 18 | 20261 | ENG76   |    79 |
+| 19 | 20261 | MB666   |    77 |
+| 20 | 20262 | FSK00   |    87 |
+| 21 | 20263 | HP999   |    76 |
+| 22 | 20263 | P1011   |    91 |
++----+-------+---------+-------+
+22 rows in set (0.001 sec)
+
+MariaDB [akademik]> SELECT jurusan, COUNT(*) AS jumlah_mahasiswa FROM mahasiswa GROUP BY jurusan;
++-------------+------------------+
+| jurusan     | jumlah_mahasiswa |
++-------------+------------------+
+| Fisika      |                2 |
+| Hukum       |                3 |
+| Kriminologi |                2 |
+| Metalurgi   |                2 |
+| Pariwisata  |                2 |
+| Statistika  |                2 |
++-------------+------------------+
+6 rows in set (0.001 sec)
+
+MariaDB [akademik]> SELECT
+    -> (SELECT Nama FROM mahasiswa WHERE mahasiswa.NPM = n.npm) AS Nama,
+    -> (SELECT Nama_mk FROM mata_kuliah WHERE mata_kuliah.Kode_mk = n.kode_mk) AS Nama_mk,
+    -> n.nilai
+    -> FROM nilai AS n
+    -> WHERE n.nilai = (SELECT MAX(nilai) FROM nilai WHERE Kode_mk = n.Kode_mk);
++--------+----------------------+-------+
+| Nama   | Nama_mk              | nilai |
++--------+----------------------+-------+
+| Damian | Bahasa Inggris       |    95 |
+| Tabi   | Agama                |    99 |
+| Cia    | Fisika Dasar         |    88 |
+| Hihi   | Kriminologi Forensik |    90 |
+| Huhu   | Matematika Bisnis    |    77 |
+| Xaxa   | Hukum Pidana         |    76 |
+| Xaxa   | PKn                  |    91 |
++--------+----------------------+-------+
+7 rows in set (0.027 sec)
+
+MariaDB [akademik]> SELECT
+    -> (SELECT nama FROM mahasiswa WHERE mahasiswa.npm = n.npm) AS nama,
+    -> COUNT(n.kode_mk) AS jumlah_matkul
+    -> FROM nilai AS n
+    -> GROUP BY n.npm;
++--------+---------------+
+| nama   | jumlah_matkul |
++--------+---------------+
+| Anya   |             2 |
+| Loid   |             2 |
+| Yor    |             2 |
+| Damian |             2 |
+| Yuri   |             2 |
+| Franky |             2 |
+| Tabi   |             2 |
+| Cia    |             1 |
+| Haha   |             1 |
+| Hihi   |             1 |
+| Huhu   |             2 |
+| Vuvu   |             1 |
+| Xaxa   |             2 |
++--------+---------------+
+13 rows in set (0.015 sec)
