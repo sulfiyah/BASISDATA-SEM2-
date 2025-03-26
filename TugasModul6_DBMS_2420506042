@@ -1,0 +1,257 @@
+MariaDB [DBMS6_2420506042]> create table mahasiswa (
+    -> NIM char(10) primary key,
+    -> Nama varchar(30) not null,
+    -> Jenis_kelamin enum('L', 'P') not null,
+    -> Alamat varchar(100) not null);
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [DBMS6_2420506042]> desc mahasiswa;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| NIM           | char(10)      | NO   | PRI | NULL    |       |
+| Nama          | varchar(30)   | NO   |     | NULL    |       |
+| Jenis_kelamin | enum('L','P') | NO   |     | NULL    |       |
+| Alamat        | varchar(100)  | NO   |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+4 rows in set (0.036 sec)
+
+MariaDB [DBMS6_2420506042]> insert into mahasiswa values
+    -> ('MHS1', 'Jungkook', 'L', 'Seoul'),
+    -> ('MHS2', 'Seulgi', 'P', 'Cirebon'),
+    -> ('MHS3', 'Lando', 'L', 'London'),
+    -> ('MHS4', 'Kamari', 'P', 'Bali'),
+    -> ('MHS5', 'Oscar', 'L', 'Melbourne');
+Query OK, 5 rows affected (0.015 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [DBMS6_2420506042]> create table dosen (
+    -> Kode_dosen char(10) primary key,
+    -> Nama_dosen varchar(30) not null,
+    -> Alamat varchar(100) not null);
+Query OK, 0 rows affected (0.024 sec)
+
+MariaDB [DBMS6_2420506042]> desc dosen;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| Kode_dosen | char(10)     | NO   | PRI | NULL    |       |
+| Nama_dosen | varchar(30)  | NO   |     | NULL    |       |
+| Alamat     | varchar(100) | NO   |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.021 sec)
+
+MariaDB [DBMS6_2420506042]> insert into dosen values
+    -> ('DS001', 'Pond Naravit', 'Bangkook'),
+    -> ('DS002', 'Phuwin Tangsakyuen', 'Bangkook'),
+    -> ('DS003', 'Kim Namjoon', 'Seoul'),
+    -> ('DS004', 'Lee Jieun', 'Seoul'),
+    -> ('DS005', 'Bae Suzy', 'Gwangju');
+Query OK, 5 rows affected (0.016 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [DBMS6_2420506042]> create table matkul (
+    -> Kode_mk char(10) primary key,
+    -> Nama_mk varchar(100) not null,
+    -> SKS int not null,
+    -> Semester int not null,
+    -> Kode_dosen char(10) not null,
+    -> foreign key(kode_dosen) references dosen(Kode_dosen));
+Query OK, 0 rows affected (0.056 sec)
+
+MariaDB [DBMS6_2420506042]> desc matkul;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| Kode_mk    | char(10)     | NO   | PRI | NULL    |       |
+| Nama_mk    | varchar(100) | NO   |     | NULL    |       |
+| SKS        | int(11)      | NO   |     | NULL    |       |
+| Semester   | int(11)      | NO   |     | NULL    |       |
+| Kode_dosen | char(10)     | NO   | MUL | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+5 rows in set (0.035 sec)
+
+MariaDB [DBMS6_2420506042]> insert into matkul values
+    -> ('KAL22', 'Kalkulus', '3', '1', 'DS002'),
+    -> ('FSK44', 'Fisika', '3', '1', 'DS002'),
+    -> ('SD555', 'Struktur data', '2', '5', 'DS004'),
+    -> ('ENG66', 'Bahasa inggris', '2', '3', 'DS005');
+    -> ('SI333', 'Sistem Informasi', '2', '3', 'DS001'),
+    -> ('BD111', 'Basis Data', '2', '3', 'DS003'),
+    -> ('SO666', 'Sistem Operasi', '3', '5', 'DS004');
+Query OK, 7 rows affected (0.016 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+MariaDB [DBMS6_2420506042]> create table jurusan (
+    -> Kode_jurusan char(10) primary key,
+    -> Nama_jurusan varchar(50) not null,
+    -> Kode_dosen char(10) not null,
+    -> foreign key(Kode_dosen) references dosen(Kode_dosen));
+Query OK, 0 rows affected (0.051 sec)
+
+MariaDB [DBMS6_2420506042]> desc jurusan;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Kode_jurusan | char(10)    | NO   | PRI | NULL    |       |
+| Nama_jurusan | varchar(50) | NO   |     | NULL    |       |
+| Kode_dosen   | char(10)    | NO   | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.035 sec)
+
+MariaDB [DBMS6_2420506042]> insert into jurusan values
+    -> ('TI', 'Teknologi Informasi', 'DS001'),
+    -> ('TE', 'Teknik Elektro', 'DS002'),
+    -> ('TN', 'Teknik Nuklir', 'DS003');
+Query OK, 3 rows affected (0.014 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [DBMS6_2420506042]> create table ambil_mk (
+    -> NIM char(10),
+    -> Kode_mk char(10),
+    -> primary key (NIM, Kode_mk),
+    -> foreign key(NIM) references mahasiswa(NIM),
+    -> foreign key(Kode_mk) references matkul(Kode_mk));
+Query OK, 0 rows affected (0.045 sec)
+
+MariaDB [DBMS6_2420506042]> desc ambil_mk;
++---------+----------+------+-----+---------+-------+
+| Field   | Type     | Null | Key | Default | Extra |
++---------+----------+------+-----+---------+-------+
+| NIM     | char(10) | NO   | PRI | NULL    |       |
+| Kode_mk | char(10) | NO   | PRI | NULL    |       |
++---------+----------+------+-----+---------+-------+
+2 rows in set (0.034 sec)
+
+MariaDB [DBMS6_2420506042]> insert into ambil_mk values
+    -> ('MHS1', 'ENG66'),
+    -> ('MHS1', 'SI333'),
+    -> ('MHS2', 'SI333'),
+    -> ('MHS3', 'FSK44'),
+    -> ('MHS3', 'KAL22'),
+    -> ('MHS4', 'SD555'),
+    -> ('MHS4', 'SO666');
+Query OK, 7 rows affected (0.015 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+
+
+
+
+
+
+1. 
+MariaDB [DBMS6_2420506042]> SELECT kode_mk, nama_mk
+    -> FROM matkul
+    -> WHERE kode_dosen =
+    -> (SELECT kode_dosen FROM jurusan WHERE kode_jurusan = 'TE');
++---------+----------+
+| kode_mk | nama_mk  |
++---------+----------+
+| FSK44   | Fisika   |
+| KAL22   | Kalkulus |
++---------+----------+
+2 rows in set (0.001 sec)
+
+2. 
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM mahasiswa
+    -> WHERE nim NOT IN
+    -> (SELECT nim FROM ambil_mk);
++------+-------+---------------+-----------+
+| NIM  | Nama  | Jenis_kelamin | Alamat    |
++------+-------+---------------+-----------+
+| MHS5 | Oscar | L             | Melbourne |
++------+-------+---------------+-----------+
+1 row in set (0.001 sec)
+
+3.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM dosen
+    -> WHERE kode_dosen IN
+    -> (SELECT kode_dosen FROM matkul WHERE semester > 3);
++------------+------------+--------+
+| Kode_dosen | Nama_dosen | Alamat |
++------------+------------+--------+
+| DS004      | Lee Jieun  | Seoul  |
++------------+------------+--------+
+1 row in set (0.001 sec)
+
+4.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM matkul m
+    -> WHERE NOT EXISTS
+    -> (SELECT kode_dosen FROM jurusan j
+    -> WHERE j.kode_jurusan = 'TE' AND j.kode_dosen = m.kode_dosen);
++---------+------------------+-----+----------+------------+
+| Kode_mk | Nama_mk          | SKS | Semester | Kode_dosen |
++---------+------------------+-----+----------+------------+
+| BD111   | Basis Data       |   2 |        3 | DS003      |
+| ENG66   | Bahasa inggris   |   2 |        3 | DS005      |
+| SD555   | Struktur data    |   2 |        5 | DS004      |
+| SI333   | Sistem Informasi |   2 |        3 | DS001      |
+| SO666   | Sistem Operasi   |   3 |        5 | DS004      |
++---------+------------------+-----+----------+------------+
+5 rows in set (0.003 sec)
+
+5.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM dosen d
+    -> WHERE EXISTS
+    -> (SELECT kode_dosen FROM matkul m
+    -> WHERE d.kode_dosen = m.kode_dosen AND NOT EXISTS
+    -> (SELECT kode_mk FROM ambil_mk a
+    -> WHERE a.kode_mk = m.kode_mk));
++------------+-------------+--------+
+| Kode_dosen | Nama_dosen  | Alamat |
++------------+-------------+--------+
+| DS003      | Kim Namjoon | Seoul  |
++------------+-------------+--------+
+1 row in set (0.015 sec)
+
+6.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM dosen
+    -> WHERE kode_dosen IN
+    -> (SELECT kode_dosen FROM matkul WHERE sks > ANY
+    -> (SELECT sks FROM matkul));
++------------+--------------------+----------+
+| Kode_dosen | Nama_dosen         | Alamat   |
++------------+--------------------+----------+
+| DS002      | Phuwin Tangsakyuen | Bangkook |
+| DS004      | Lee Jieun          | Seoul    |
++------------+--------------------+----------+
+2 rows in set (0.001 sec)
+
+7.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM mahasiswa m
+    -> WHERE EXISTS
+    -> (SELECT * FROM dosen d
+    -> WHERE m.alamat = d.alamat AND d.kode_dosen NOT IN
+    -> (SELECT kode_dosen FROM jurusan
+    -> WHERE kode_jurusan = 'TE'));
++------+----------+---------------+--------+
+| NIM  | Nama     | Jenis_kelamin | Alamat |
++------+----------+---------------+--------+
+| MHS1 | Jungkook | L             | Seoul  |
++------+----------+---------------+--------+
+1 row in set (0.002 sec)
+
+8.
+MariaDB [DBMS6_2420506042]> SELECT *
+    -> FROM mahasiswa m
+    -> WHERE m.nim IN
+    -> (SELECT a.nim FROM ambil_mk a
+    -> WHERE a.kode_mk IN
+    -> (SELECT mk.kode_mk FROM matkul mk
+    -> WHERE mk.kode_dosen IN
+    -> (SELECT kode_dosen FROM jurusan
+    -> WHERE kode_jurusan = 'TE'))
+    -> );
++------+-------+---------------+--------+
+| NIM  | Nama  | Jenis_kelamin | Alamat |
++------+-------+---------------+--------+
+| MHS3 | Lando | L             | London |
++------+-------+---------------+--------+
+1 row in set (0.001 sec)
