@@ -1,0 +1,486 @@
+MariaDB [(none)]> create database perpustakaan;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use perpustakaan;
+Database changed
+MariaDB [perpustakaan]> create table anggota (
+    -> id_anggota varchar(10) PRIMARY KEY,
+    -> Nama varchar(50) NOT NULL,
+    -> Jurusan varchar(20) default 'umum',
+    -> Tgl_daftar date NOT NULL
+    -> );
+Query OK, 0 rows affected (0.012 sec)
+
+MariaDB [perpustakaan]> desc anggota;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| id_anggota | varchar(10) | NO   | PRI | NULL    |       |
+| Nama       | varchar(50) | NO   |     | NULL    |       |
+| Jurusan    | varchar(20) | YES  |     | umum    |       |
+| Tgl_daftar | date        | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.022 sec)
+
+MariaDB [perpustakaan]> create table buku (
+    -> id_buku varchar(10) PRIMARY KEY,
+    -> Judul varchar(100) NOT NULL,
+    -> Penerbit varchar(50),
+    -> Tahun_terbit int CHECK (tahun_terbit BETWEEN 1900 AND 2025)
+    -> );
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [perpustakaan]> desc buku;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| id_buku      | varchar(10)  | NO   | PRI | NULL    |       |
+| Judul        | varchar(100) | NO   |     | NULL    |       |
+| Penerbit     | varchar(50)  | YES  |     | NULL    |       |
+| Tahun_terbit | int(11)      | YES  |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+4 rows in set (0.033 sec)
+
+MariaDB [perpustakaan]> create table peminjaman (
+    -> id_peminjaman int PRIMARY KEY AUTO_INCREMENT,
+    -> id_anggota varchar(10),
+    -> id_buku varchar(10),
+    -> Tgl_pinjam date NOT NULL,
+    -> Tgl_kembali date NULL,
+    -> foreign key(id_anggota) references anggota(id_anggota),
+    -> foreign key(id_buku) references buku(id_buku)
+    -> );
+Query OK, 0 rows affected (0.055 sec)
+
+MariaDB [perpustakaan]> desc peminjaman;
++---------------+-------------+------+-----+---------+----------------+
+| Field         | Type        | Null | Key | Default | Extra          |
++---------------+-------------+------+-----+---------+----------------+
+| id_peminjaman | int(11)     | NO   | PRI | NULL    | auto_increment |
+| id_anggota    | varchar(10) | YES  | MUL | NULL    |                |
+| id_buku       | varchar(10) | YES  | MUL | NULL    |                |
+| Tgl_pinjam    | date        | NO   |     | NULL    |                |
+| Tgl_kembali   | date        | YES  |     | NULL    |                |
++---------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.036 sec)
+
+MariaDB [perpustakaan]> alter table peminjaman add Denda int default 0;
+Query OK, 0 rows affected (0.026 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> desc peminjaman;
++---------------+-------------+------+-----+---------+----------------+
+| Field         | Type        | Null | Key | Default | Extra          |
++---------------+-------------+------+-----+---------+----------------+
+| id_peminjaman | int(11)     | NO   | PRI | NULL    | auto_increment |
+| id_anggota    | varchar(10) | YES  | MUL | NULL    |                |
+| id_buku       | varchar(10) | YES  | MUL | NULL    |                |
+| Tgl_pinjam    | date        | NO   |     | NULL    |                |
+| Tgl_kembali   | date        | YES  |     | NULL    |                |
+| Denda         | int(11)     | YES  |     | 0       |                |
++---------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.036 sec)
+
+MariaDB [perpustakaan]> insert into anggota values
+    -> ('A111', 'Falikha', 'Teknologi Informasi', '2024/07/01'),
+    -> ('A222', 'Jungkook', 'Seni Musik', '2023/06/13'),
+    -> ('A333', 'Naravit', 'Teknik Biomedis', '2025/03/05');
+Query OK, 3 rows affected (0.018 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from anggota;
++------------+----------+---------------------+------------+
+| id_anggota | Nama     | Jurusan             | Tgl_daftar |
++------------+----------+---------------------+------------+
+| A111       | Falikha  | Teknologi Informasi | 2024-07-01 |
+| A222       | Jungkook | Seni Musik          | 2023-06-13 |
+| A333       | Naravit  | Teknik Biomedis     | 2025-03-05 |
++------------+----------+---------------------+------------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> insert into buku values
+    -> ('B101', 'Mikrokosmos', 'BigHit', 2019),
+    -> ('B102', 'Butter', 'lachimolala', 2022),
+    -> ('B103', 'DNA', 'Gramedia', 2017),
+    -> ('B104', 'Telepathy', 'HopeEnt', 2020),
+    -> ('B105', 'Spring Day', 'YNWA', 2017);
+Query OK, 5 rows affected (0.016 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from buku;
++---------+-------------+-------------+--------------+
+| id_buku | Judul       | Penerbit    | Tahun_terbit |
++---------+-------------+-------------+--------------+
+| B101    | Mikrokosmos | BigHit      |         2019 |
+| B102    | Butter      | lachimolala |         2022 |
+| B103    | DNA         | Gramedia    |         2017 |
+| B104    | Telepathy   | HopeEnt     |         2020 |
+| B105    | Spring Day  | YNWA        |         2017 |
++---------+-------------+-------------+--------------+
+5 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> insert into peminjaman values
+    -> ('1', 'A111', 'B105', '2025/01/07', '2025/01/14', '0'),
+    -> ('2', 'A222', 'B101', '2024/12/30', '2025/01/02', '0'),
+    -> ('3', 'A333', 'B101', '2025/04/01', null, '0');
+Query OK, 3 rows affected (0.016 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from peminjaman;
++---------------+------------+---------+------------+-------------+-------+
+| id_peminjaman | id_anggota | id_buku | Tgl_pinjam | Tgl_kembali | Denda |
++---------------+------------+---------+------------+-------------+-------+
+|             1 | A111       | B105    | 2025-01-07 | 2025-01-14  |     0 |
+|             2 | A222       | B101    | 2024-12-30 | 2025-01-02  |     0 |
+|             3 | A333       | B101    | 2025-04-01 | NULL        |     0 |
++---------------+------------+---------+------------+-------------+-------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> UPDATE peminjaman
+    -> SET tgl_kembali = '2025/02/06', denda = 500 * 30
+    -> WHERE id_peminjaman = 1;
+Query OK, 1 row affected (0.022 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> select * from peminjaman;
++---------------+------------+---------+------------+-------------+-------+
+| id_peminjaman | id_anggota | id_buku | Tgl_pinjam | Tgl_kembali | Denda |
++---------------+------------+---------+------------+-------------+-------+
+|             1 | A111       | B105    | 2025-01-07 | 2025-02-06  | 15000 |
+|             2 | A222       | B101    | 2024-12-30 | 2025-01-02  |     0 |
+|             3 | A333       | B101    | 2025-04-01 | NULL        |     0 |
++---------------+------------+---------+------------+-------------+-------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> SELECT a.nama, COUNT(p.id_buku) AS jumlah_buku
+    -> FROM peminjaman p
+    -> JOIN anggota a ON p.id_anggota = a.id_anggota
+    -> GROUP BY a.nama;
++----------+-------------+
+| nama     | jumlah_buku |
++----------+-------------+
+| Falikha  |           1 |
+| Jungkook |           1 |
+| Naravit  |           1 |
++----------+-------------+
+3 rows in set (0.019 sec)
+
+MariaDB [perpustakaan]> SELECT AVG(DATEDIFF(tgl_kembali, tgl_pinjam)) AS rata_rata_hari
+    -> FROM peminjaman
+    -> WHERE tgl_kembali IS NOT NULL;
++----------------+
+| rata_rata_hari |
++----------------+
+|        16.5000 |
++----------------+
+1 row in set (0.015 sec)
+
+MariaDB [perpustakaan]> SELECT b.judul, COUNT(p.id_buku) AS jumlah_dipinjam
+    -> FROM peminjaman p
+    -> JOIN buku b ON p.id_buku = b.id_buku
+    -> GROUP by b.judul
+    -> ORDER BY jumlah_dipinjam DESC;
++-------------+-----------------+
+| judul       | jumlah_dipinjam |
++-------------+-----------------+
+| Mikrokosmos |               2 |
+| Spring Day  |               1 |
++-------------+-----------------+
+2 rows in set (0.015 sec)
+
+MariaDB [perpustakaan]> create table penerbit (
+    -> id_penerbit varchar(10) PRIMARY KEY,
+    -> Nama_penerbit varchar(50) NOT NULL,
+    -> Alamat text NOT NULL
+    -> );
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [perpustakaan]> desc penerbit;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| id_penerbit   | varchar(10) | NO   | PRI | NULL    |       |
+| Nama_penerbit | varchar(50) | NO   |     | NULL    |       |
+| Alamat        | text        | NO   |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+3 rows in set (0.025 sec)
+
+MariaDB [perpustakaan]> insert into penerbit values
+    -> ('P001', 'BigHit', 'Garut'),
+    -> ('P002', 'lachimolala', 'Bandung'),
+    -> ('P003', 'HopeEnt', 'Cirebon'),
+    -> ('P004', 'Gramedia', 'Jakarta'),
+    -> ('P005', 'YNWA', 'Jakarta');
+Query OK, 5 rows affected (0.015 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from penerbit;
++-------------+---------------+---------+
+| id_penerbit | Nama_penerbit | Alamat  |
++-------------+---------------+---------+
+| P001        | BigHit        | Garut   |
+| P002        | lachimolala   | Bandung |
+| P003        | HopeEnt       | Cirebon |
+| P004        | Gramedia      | Jakarta |
+| P005        | YNWA          | Jakarta |
++-------------+---------------+---------+
+5 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> alter table buku
+    -> add column id_penerbit varchar(10),
+    -> add constraint fk_id_penerbit foreign key(id_penerbit) references penerbit(id_penerbit);
+Query OK, 5 rows affected (0.084 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> desc buku;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| id_buku      | varchar(10)  | NO   | PRI | NULL    |       |
+| Judul        | varchar(100) | NO   |     | NULL    |       |
+| Penerbit     | varchar(50)  | YES  |     | NULL    |       |
+| Tahun_terbit | int(11)      | YES  |     | NULL    |       |
+| id_penerbit  | varchar(10)  | YES  | MUL | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+5 rows in set (0.033 sec)
+
+MariaDB [perpustakaan]> update buku set id_penerbit = 'P001' where id_buku = 'B101';
+Query OK, 1 row affected (0.016 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> update buku set id_penerbit = 'P002' where id_buku = 'B102';
+Query OK, 1 row affected (0.015 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> update buku set id_penerbit = 'P003' where id_buku = 'B104';
+Query OK, 1 row affected (0.015 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> update buku set id_penerbit = 'P004' where id_buku = 'B103';
+Query OK, 1 row affected (0.015 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> update buku set id_penerbit = 'P005' where id_buku = 'B105';
+Query OK, 1 row affected (0.016 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> select * from buku;
++---------+-------------+-------------+--------------+-------------+
+| id_buku | Judul       | Penerbit    | Tahun_terbit | id_penerbit |
++---------+-------------+-------------+--------------+-------------+
+| B101    | Mikrokosmos | BigHit      |         2019 | P001        |
+| B102    | Butter      | lachimolala |         2022 | P002        |
+| B103    | DNA         | Gramedia    |         2017 | P004        |
+| B104    | Telepathy   | HopeEnt     |         2020 | P003        |
+| B105    | Spring Day  | YNWA        |         2017 | P005        |
++---------+-------------+-------------+--------------+-------------+
+5 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> select b.id_buku, b.judul, p.nama_penerbit
+    -> FROM buku b
+    -> INNER JOIN penerbit p ON b.id_penerbit = p.id_penerbit;
++---------+-------------+---------------+
+| id_buku | judul       | nama_penerbit |
++---------+-------------+---------------+
+| B101    | Mikrokosmos | BigHit        |
+| B102    | Butter      | lachimolala   |
+| B103    | DNA         | Gramedia      |
+| B104    | Telepathy   | HopeEnt       |
+| B105    | Spring Day  | YNWA          |
++---------+-------------+---------------+
+5 rows in set (0.001 sec)
+
+
+
+# Nomor 5
+
+MariaDB [perpustakaan]> create table transaksipeminjaman (
+    -> id_transaksi varchar(10) PRIMARY KEY,
+    -> Nama varchar(50) NOT NULL,
+    -> Jurusan varchar(20) NOT NULL,
+    -> Judul varchar(100) NOT NULL,
+    -> Penerbit varchar(50),
+    -> Tgl_pinjam date NOT NULL,
+    -> Tgl_kembali date NULL,
+    -> Denda int default 0
+    -> );
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [perpustakaan]> insert into transaksipeminjaman values
+    -> ('1', 'Falikha', 'Teknologi Informasi', 'Spring day', 'YNWA', '2025/01/07', '2025/01/14', '0'),
+    -> ('2', 'Jungkook', 'Seni Musik', 'Mikrokosmos', 'BigHit', '2024/12/30', '2025/01/02', '0'),
+    -> ('3', 'Naravit', 'Teknik Biomedis', 'Mikrokosmos', 'BigHit', '2025/04/01', '2025/04/05', '0');
+Query OK, 3 rows affected (0.017 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from transaksipeminjaman;
++--------------+----------+---------------------+-------------+----------+------------+-------------+-------+
+| id_transaksi | Nama     | Jurusan             | Judul       | Penerbit | Tgl_pinjam | Tgl_kembali | Denda |
++--------------+----------+---------------------+-------------+----------+------------+-------------+-------+
+| 1            | Falikha  | Teknologi Informasi | Spring day  | YNWA     | 2025-01-07 | 2025-01-14  |     0 |
+| 2            | Jungkook | Seni Musik          | Mikrokosmos | BigHit   | 2024-12-30 | 2025-01-02  |     0 |
+| 3            | Naravit  | Teknik Biomedis     | Mikrokosmos | BigHit   | 2025-04-01 | 2025-04-05  |     0 |
++--------------+----------+---------------------+-------------+----------+------------+-------------+-------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> create table anggota2 (
+    -> id_anggota varchar(10) PRIMARY KEY,
+    -> Nama varchar(50) NOT NULL,
+    -> Jurusan varchar(20) NOT NULL);
+Query OK, 0 rows affected (0.012 sec)
+
+MariaDB [perpustakaan]> insert into anggota2 values
+    -> ('A111', 'Falikha', 'Teknologi Informasi'),
+    -> ('A222', 'Jungkook', 'Seni Musik'),
+    -> ('A333', 'Naravit', 'Teknik Biomedis');
+Query OK, 3 rows affected (0.017 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from anggota2;
++------------+----------+---------------------+
+| id_anggota | Nama     | Jurusan             |
++------------+----------+---------------------+
+| A111       | Falikha  | Teknologi Informasi |
+| A222       | Jungkook | Seni Musik          |
+| A333       | Naravit  | Teknik Biomedis     |
++------------+----------+---------------------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> create table buku2 (
+    -> id_buku varchar(10) PRIMARY KEY,
+    -> Judul varchar(100) NOT NULL,
+    -> Penerbit varchar(50) NOT NULL);
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [perpustakaan]> insert into buku2 values
+    -> ('B101', 'Spring Day', 'Bighit'),
+    -> ('B102', 'DNA', 'Gramedia'),
+    -> ('B103', 'Mikrokosmos', 'YNWA');
+Query OK, 3 rows affected (0.016 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from buku2;
++---------+-------------+----------+
+| id_buku | Judul       | Penerbit |
++---------+-------------+----------+
+| B101    | Spring Day  | Bighit   |
+| B102    | DNA         | Gramedia |
+| B103    | Mikrokosmos | YNWA     |
++---------+-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> create table peminjaman2 (
+    -> id_transaksi varchar(10) primary key,
+    -> id_anggota varchar(10) not null,
+    -> id_buku varchar(10) not null,
+    -> tgl_pinjam date not null,
+    -> tgl_kembali date null,
+    -> denda int default 0,
+    -> foreign key(id_anggota) references anggota2(id_anggota),
+    -> foreign key(id_buku) references buku2(id_buku));
+Query OK, 0 rows affected (0.062 sec)
+
+MariaDB [perpustakaan]> insert into peminjaman2 values
+    -> ('1', 'A111', 'B101', '2025/01/07', '2025/01/14', '0'),
+    -> ('2', 'A222', 'B102', '2024/12/30', '2025/01/02', '0'),
+    -> ('3', 'A333', 'B103', '2025/04/01', '2025/04/05', '0');
+Query OK, 3 rows affected (0.020 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from peminjaman2;
++--------------+------------+---------+------------+-------------+-------+
+| id_transaksi | id_anggota | id_buku | tgl_pinjam | tgl_kembali | denda |
++--------------+------------+---------+------------+-------------+-------+
+| 1            | A111       | B101    | 2025-01-07 | 2025-01-14  |     0 |
+| 2            | A222       | B102    | 2024-12-30 | 2025-01-02  |     0 |
+| 3            | A333       | B103    | 2025-04-01 | 2025-04-05  |     0 |
++--------------+------------+---------+------------+-------------+-------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> create table penerbit2 (
+    -> id_penerbit varchar(10) primary key,
+    -> penerbit varchar(50) not null);
+Query OK, 0 rows affected (0.025 sec)
+
+MariaDB [perpustakaan]> insert into penerbit2 values
+    -> ('P001', 'BigHit'),
+    -> ('P002', 'Gramedia'),
+    -> ('P003', 'YNWA');
+Query OK, 3 rows affected (0.016 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from penerbit2;
++-------------+----------+
+| id_penerbit | penerbit |
++-------------+----------+
+| P001        | BigHit   |
+| P002        | Gramedia |
+| P003        | YNWA     |
++-------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [perpustakaan]> create table buku3 (
+    -> id_buku varchar(10) primary key,
+    -> id_penerbit varchar(10) not null,
+    -> judul varchar(100) not null,
+    -> foreign key (id_penerbit) references penerbit2(id_penerbit));
+Query OK, 0 rows affected (0.060 sec)
+
+MariaDB [perpustakaan]> insert into buku3 values
+    -> ('B101', 'P001', 'Spring Day'),
+    -> ('B102', 'P002', 'DNA'),
+    -> ('B103', 'P003', 'Mikrokosmos');
+Query OK, 3 rows affected (0.017 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [perpustakaan]> select * from buku3;
++---------+-------------+-------------+
+| id_buku | id_penerbit | judul       |
++---------+-------------+-------------+
+| B101    | P001        | Spring Day  |
+| B102    | P002        | DNA         |
+| B103    | P003        | Mikrokosmos |
++---------+-------------+-------------+
+3 rows in set (0.001 sec)
+
+
+
+
+
+MariaDB [perpustakaan]> SELECT a.nama FROM anggota a
+    -> JOIN peminjaman p ON a.id_anggota = p.id_anggota
+    -> JOIN buku b ON p.id_buku = b.id_buku
+    -> WHERE b.judul = 'Mikrokosmos';
++----------+
+| nama     |
++----------+
+| Jungkook |
+| Naravit  |
++----------+
+2 rows in set (0.014 sec)
+
+MariaDB [perpustakaan]> SELECT judul FROM buku
+    -> WHERE id_buku NOT IN (SELECT id_buku FROM peminjaman);
++-----------+
+| judul     |
++-----------+
+| Butter    |
+| DNA       |
+| Telepathy |
++-----------+
+3 rows in set (0.020 sec)
+
+MariaDB [perpustakaan]> UPDATE peminjaman SET denda = 0
+    -> WHERE tgl_kembali IS not null AND datediff(tgl_kembali, tgl_pinjam) <=31;
+Query OK, 1 row affected (0.016 sec)
+Rows matched: 2  Changed: 1  Warnings: 0
+
+MariaDB [perpustakaan]> select * from peminjaman;
++---------------+------------+---------+------------+-------------+-------+
+| id_peminjaman | id_anggota | id_buku | Tgl_pinjam | Tgl_kembali | Denda |
++---------------+------------+---------+------------+-------------+-------+
+|             1 | A111       | B105    | 2025-01-07 | 2025-02-06  |     0 |
+|             2 | A222       | B101    | 2024-12-30 | 2025-01-02  |     0 |
+|             3 | A333       | B101    | 2025-04-01 | NULL        |     0 |
++---------------+------------+---------+------------+-------------+-------+
+3 rows in set (0.001 sec)
